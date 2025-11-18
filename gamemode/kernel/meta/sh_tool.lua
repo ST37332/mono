@@ -1,5 +1,5 @@
 
-local TOOL = ix.meta.tool or {}
+local TOOL = mono.meta.tool or {}
 
 function TOOL:Create()
 	local object = {}
@@ -122,4 +122,4 @@ function TOOL:CheckObjects()
 	end
 end
 
-ix.meta.tool = TOOL
+mono.meta.tool = TOOL

@@ -5,46 +5,12 @@ GM.Version = "0.1"
 
 do
 	local playerMeta = FindMetaTable("Player")
-	playerMeta.ixSteamID64 = playerMeta.ixSteamID64 or playerMeta.SteamID64
+	playerMeta.mSteamID64 = playerMeta.mSteamID64 or playerMeta.SteamID64
 
 	function playerMeta:SteamID64()
-		return self:ixSteamID64() or 0
+		return self:mSteamID64() or 0
 	end
 
-	-- luacheck: globals player_manager
-	player_manager.TranslateModel = player_manager.TranslateModel or player_manager.TranslateToPlayerModelName
-
-	function player_manager.TranslateToPlayerModelName(model)
-		model = model:lower():gsub("\\", "/")
-		local result = player_manager.TranslateModel(model)
-
-		if (result == "kleiner" and !model:find("kleiner")) then
-			local model2 = model:gsub("models/", "models/player/")
-			result = player_manager.TranslateModel(model2)
-
-			if (result != "kleiner") then
-				return result
-			end
-
-			model2 = model:gsub("models/humans", "models/player")
-			result = player_manager.TranslateModel(model2)
-
-			if (result != "kleiner") then
-				return result
-			end
-
-			model2 = model:gsub("models/zombie/", "models/player/zombie_")
-			result = player_manager.TranslateModel(model2)
-
-			if (result != "kleiner") then
-				return result
-			end
-		end
-
-		return result
-	end
-
-	local playerMeta = FindMetaTable("Player")
 end
 
 mono.DX = mono.DX or mono.util.Include("game/cl_ui_shaders.lua")
@@ -58,14 +24,14 @@ mono.util.Include("game/ui/mainmenu.title.lua", "client")
 mono.util.Include("game/ui/mainmenu.create.lua", "client")
 mono.util.Include("game/ui/tabmenu.frame.lua", "client")
 mono.util.Include("game/ui/tabmenu.lua", "client")
-mono.util.Include("core/libs/sh_character.lua")
 
 mono.util.Include("game/items/sh_item.lua")
 mono.util.Include("game/inventory/sh_inventory.lua")
 
-mono.util.IncludeDir("kernel/libs")
-mono.util.IncludeDir("core/derma", nil, "client")
-mono.util.IncludeDir("core/hooks")
+mono.util.IncludeDir("kernel/meta")
+mono.util.IncludeDir("kernel/utils")
+mono.util.IncludeDir("kernel/utils/thirdparty")
+mono.util.IncludeDir("kernel/modules")
 
 
 mono.lang.LoadFromDir("mono/gamemode/kernel/cfg/languages")

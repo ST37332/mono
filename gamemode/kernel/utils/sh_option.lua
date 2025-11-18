@@ -9,7 +9,54 @@ if (SERVER) then
 	util.AddNetworkString("bOptionUnloadedList")
 	util.AddNetworkString("bOptionPluginToggle")
 
-	mono.option.server = ix.yaml.Read("gamemodes/mono/mono.yml") or {}
+	mono.YML = {}
+	local dbFile = "mono/database.yml"
+
+	mono.datab = {
+		ip = "localhost",
+		username = "root",
+		password = "",
+		database = "mono_dev",
+		port = 3306
+	}
+
+	local dbConfLoaded = false
+
+	if file.Exists(dbFile, "DATA") then
+		local worked, err = pcall(function() mono.yaml.Read("gamemodes/"..dbFile) end) 
+
+		if worked then
+			local dbConf = mono.yaml.Read("gamemodes/"..dbFile)
+
+			if dbConf and type(dbConf) == "table" then
+				if dbConf.db and type(dbConf.db) == "table" then
+					table.Merge(mono.datab, dbConf.db)
+					print("[Mono] [database.yml] Loaded release database config file!")
+					dbConfLoaded = true
+
+					if dbConf.dev and type(dbConf.dev) == "table" then
+						if dbConf.dev.preview then
+							isPreview:SetInt(1)
+						end
+					end
+				end
+
+				mono.YML = dbConf
+			end
+		else
+			print("[Mono] [database.yml] Error: "..err)
+		end
+	end
+
+	mono.YML = mono.YML or {}
+	mono.YML.apis = mono.YML.apis or {}
+
+	if not dbConfLoaded then
+		print("[Mono] [database.yml] No database configuration found. Assuming development database configuration. If this is a live server please setup this file!")
+		isPreview:SetInt(1)
+	end
+
+	mysql:Connect(mono.datab.ip, mono.datab.username, mono.datab.password, mono.datab.database, mono.datab.port)
 end
 
 
@@ -226,7 +273,7 @@ if (SERVER) then
 		end
 
 		net.Start("bOptionUnloadedList")
-			net.WriteTable(ix.plugin.unloaded)
+			net.WriteTable(mono.addon.unloaded)
 		net.Send(client)
 	end)
 
@@ -236,11 +283,11 @@ if (SERVER) then
 		end
 
 		local uniqueID = net.ReadString()
-		local bUnloaded = !!ix.plugin.unloaded[uniqueID]
+		local bUnloaded = !!mono.addon.unloaded[uniqueID]
 		local bShouldEnable = net.ReadBool()
 
 		if ((bShouldEnable and bUnloaded) or (!bShouldEnable and !bUnloaded)) then
-			ix.plugin.SetUnloaded(uniqueID, !bShouldEnable)
+			mono.addon.SetUnloaded(uniqueID, !bShouldEnable)
 
 			mono.util.NotifyLocalized(bShouldEnable and "pluginLoaded" or "pluginUnloaded", nil, client:GetName(), uniqueID)
 			mono.log.Add(client, bShouldEnable and "pluginLoaded" or "pluginUnloaded", uniqueID)
@@ -276,7 +323,7 @@ else
 
 			option.value = value
 
-			local properties = ix.gui.properties
+			local properties = mono.gui.properties
 
 			if (IsValid(properties)) then
 				local row = properties:GetCategory(L(option.data and option.data.category or "misc")):GetRow(key)
@@ -293,11 +340,11 @@ else
 	end)
 
 	net.Receive("bOptionUnloadedList", function()
-		ix.plugin.unloaded = net.ReadTable()
-		ix.gui.bReceivedUnloadedPlugins = true
+		mono.addon.unloaded = net.ReadTable()
+		mono.gui.bReceivedUnloadedPlugins = true
 
-		if (IsValid(ix.gui.pluginManager)) then
-			ix.gui.pluginManager:UpdateUnloaded()
+		if (IsValid(mono.gui.pluginManager)) then
+			mono.gui.pluginManager:UpdateUnloaded()
 		end
 	end)
 
@@ -306,13 +353,13 @@ else
 		local bEnabled = net.ReadBool()
 
 		if (bEnabled) then
-			ix.plugin.unloaded[uniqueID] = nil
+			mono.addon.unloaded[uniqueID] = nil
 		else
-			ix.plugin.unloaded[uniqueID] = true
+			mono.addon.unloaded[uniqueID] = true
 		end
 
-		if (IsValid(ix.gui.pluginManager)) then
-			ix.gui.pluginManager:UpdatePlugin(uniqueID, bEnabled)
+		if (IsValid(mono.gui.pluginManager)) then
+			mono.gui.pluginManager:UpdatePlugin(uniqueID, bEnabled)
 		end
 	end)
 
@@ -333,11 +380,11 @@ else
 			Sections = {
 				plugins = {
 					Create = function(info, container)
-						ix.gui.pluginManager = container:Add("bPluginManager")
+						mono.gui.pluginManager = container:Add("bPluginManager")
 					end,
 
 					OnSelected = function(info, container)
-						ix.gui.pluginManager.searchEntry:RequestFocus()
+						mono.gui.pluginManager.searchEntry:RequestFocus()
 					end
 				}
 			}

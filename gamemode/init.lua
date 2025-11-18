@@ -1,5 +1,46 @@
 DeriveGamemode("sandbox")
 
+mono.allowedHoldableClasses = {
+	["prop_physics"] = true,
+	["prop_physics_override"] = true,
+	["prop_physics_multiplayer"] = true,
+	["prop_ragdoll"] = true
+}
+
+function GM:PlayerInitialSpawn(client)
+	client.bJoinTime = RealTime()
+
+	mono.option.Send(client)
+	mono.date.Send(client)
+
+	client:LoadData(function(data)
+		if (!IsValid(client)) then return end
+
+		-- Don't use the character cache if they've connected to another server using the same database
+		local address = mono.util.GetAddress()
+		local bNoCache = client:GetData("lastIP", address) != address
+		client:SetData("lastIP", address)
+
+		net.Start("bDataSync")
+			net.WriteTable(data or {})
+			net.WriteUInt(client.bPlayTime or 0, 32)
+		net.Send(client)
+
+	end)
+
+	client:SetNoDraw(true)
+	client:SetNotSolid(true)
+	client:Lock()
+
+	timer.Simple(1, function()
+		if (!IsValid(client)) then
+			return
+		end
+
+		client:KillSilent()
+		client:StripAmmo()
+	end)
+end
 
 mono = mono or {
 	util = {}, 

@@ -31,6 +31,13 @@ if (!system.IsWindows()) then
 	end
 end
 
+local GM = GM or GAMEMODE
+
+function GM:InitPostEntity()
+	mono.joinTime = RealTime() - 0.9716
+	mono.setting.Sync()
+end
+
 DeriveGamemode("sandbox")
 mono = mono or {
 	gui = {}, 

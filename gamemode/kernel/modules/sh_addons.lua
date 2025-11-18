@@ -1,12 +1,12 @@
-ix.addon = ix.addon or {}
-ix.addon.list = ix.addon.list or {}
-ix.addon.unloaded = ix.addon.unloaded or {}
+mono.addon = mono.addon or {}
+mono.addon.list = mono.addon.list or {}
+mono.addon.unloaded = mono.addon.unloaded or {}
 
-ix.util.Include("mono/gamemode/kornel/meta/sh_tool.lua")
+mono.util.Include("mono/gamemode/kornel/meta/sh_tool.lua")
 
 HOOKS_CACHE = {}
 
-function ix.addon.Load(uniqueID, path, isSingleFile, variable)
+function mono.addon.Load(uniqueID, path, isSingleFile, variable)
 	if (hook.Run("AddonShouldLoad", uniqueID) == false) then return end
 
 	variable = variable or "ADDON"
@@ -21,38 +21,32 @@ function ix.addon.Load(uniqueID, path, isSingleFile, variable)
 		author = "Anonymous"
 	}
 
-	if (ix.addon.list[uniqueID]) then
-		ADDON = ix.addon.list[uniqueID]
+	if (mono.addon.list[uniqueID]) then
+		ADDON = mono.addon.list[uniqueID]
 	end
 
 	_G[variable] = ADDON
 	ADDON.loading = true
 
 	if (!isSingleFile) then
-		ix.lang.LoadFromDir(path.."/languages")
-		ix.util.IncludeDir(path.."/libs", true)
-		ix.attributes.LoadFromDir(path.."/attributes")
-		ix.faction.LoadFromDir(path.."/factions")
-		ix.class.LoadFromDir(path.."/classes")
-		ix.item.LoadFromDir(path.."/items")
-		ix.addon.LoadFromDir(path.."/addons")
-		ix.util.IncludeDir(path.."/derma", true)
-		ix.addon.LoadEntities(path.."/entities")
+		mono.util.IncludeDir(path.."/utils", true)
+		mono.addon.LoadFromDir(path.."/addons")
+		mono.addon.LoadEntities(path.."/entities")
 
 		hook.Run("DoAddonIncludes", path, ADDON)
 	end
 
-	ix.util.Include(isSingleFile and path or path.."/sh_"..variable:lower()..".lua", "shared")
+	mono.util.Include(isSingleFile and path or path.."/sh_"..variable:lower()..".lua", "shared")
 	ADDON.loading = false
 
 	local uniqueID2 = uniqueID
 
 	function ADDON:SetData(value, global, ignoreMap)
-		ix.data.Set(uniqueID2, value, global, ignoreMap)
+		mono.data.Set(uniqueID2, value, global, ignoreMap)
 	end
 
 	function ADDON:GetData(default, global, ignoreMap, refresh)
-		return ix.data.Get(uniqueID2, default, global, ignoreMap, refresh) or {}
+		return mono.data.Get(uniqueID2, default, global, ignoreMap, refresh) or {}
 	end
 
 	hook.Run("AddonLoaded", uniqueID, ADDON)
@@ -62,11 +56,11 @@ function ix.addon.Load(uniqueID, path, isSingleFile, variable)
 	end
 end
 
-function ix.addon.GetHook(addonName, hookName)
+function mono.addon.GetHook(addonName, hookName)
 	local h = HOOKS_CACHE[hookName]
 
 	if (h) then
-		local p = ix.addon.list[addonName]
+		local p = mono.addon.list[addonName]
 
 		if (p) then
 			return h[p]
@@ -76,25 +70,25 @@ function ix.addon.GetHook(addonName, hookName)
 	return
 end
 
-function ix.addon.LoadEntities(path)
+function mono.addon.LoadEntities(path)
 	local bLoadedTools
 	local files, folders
 
 	local function IncludeFiles(path2, bClientOnly)
 		if (SERVER and !bClientOnly) then
 			if (file.Exists(path2.."init.lua", "LUA")) then
-				ix.util.Include(path2.."init.lua", "server")
+				mono.util.Include(path2.."init.lua", "server")
 			elseif (file.Exists(path2.."shared.lua", "LUA")) then
-				ix.util.Include(path2.."shared.lua")
+				mono.util.Include(path2.."shared.lua")
 			end
 
 			if (file.Exists(path2.."cl_init.lua", "LUA")) then
-				ix.util.Include(path2.."cl_init.lua", "client")
+				mono.util.Include(path2.."cl_init.lua", "client")
 			end
 		elseif (file.Exists(path2.."cl_init.lua", "LUA")) then
-			ix.util.Include(path2.."cl_init.lua", "client")
+			mono.util.Include(path2.."cl_init.lua", "client")
 		elseif (file.Exists(path2.."shared.lua", "LUA")) then
-			ix.util.Include(path2.."shared.lua")
+			mono.util.Include(path2.."shared.lua")
 		end
 	end
 
@@ -104,7 +98,7 @@ function ix.addon.LoadEntities(path)
 
 		for _, v in ipairs(folders) do
 			local path2 = path.."/"..folder.."/"..v.."/"
-			v = ix.util.StripRealmPrefix(v)
+			v = mono.util.StripRealmPrefix(v)
 
 			_G[variable] = table.Copy(default)
 
@@ -132,7 +126,7 @@ function ix.addon.LoadEntities(path)
 		end
 
 		for _, v in ipairs(files) do
-			local niceName = ix.util.StripRealmPrefix(string.StripExtension(v))
+			local niceName = mono.util.StripRealmPrefix(string.StripExtension(v))
 
 			_G[variable] = table.Copy(default)
 
@@ -142,7 +136,7 @@ function ix.addon.LoadEntities(path)
 				create(niceName)
 			end
 
-			ix.util.Include(path.."/"..folder.."/"..v, clientOnly and "client" or "shared")
+			mono.util.Include(path.."/"..folder.."/"..v, clientOnly and "client" or "shared")
 
 			if (clientOnly) then
 				if (CLIENT) then
@@ -182,7 +176,7 @@ function ix.addon.LoadEntities(path)
 		Spawnable = true
 	}, false, nil, function(ent)
 		if (SERVER and ent.Holdable == true) then
-			ix.allowedHoldableClasses[ent.ClassName] = true
+			mono.allowedHoldableClasses[ent.ClassName] = true
 		end
 	end)
 
@@ -197,7 +191,7 @@ function ix.addon.LoadEntities(path)
 			className = className:sub(4)
 		end
 
-		TOOL = ix.meta.tool:Create()
+		TOOL = mono.meta.tool:Create()
 		TOOL.Mode = className
 		TOOL:CreateConVars()
 	end)
@@ -209,45 +203,45 @@ function ix.addon.LoadEntities(path)
 	end
 end
 
-function ix.addon.Initialize()
-	ix.addon.unloaded = ix.data.Get("unloaded", {}, true, true)
+function mono.addon.Initialize()
+	mono.addon.unloaded = mono.data.Get("unloaded", {}, true, true)
 
-	ix.addon.LoadFromDir("mono/addons")
+	mono.addon.LoadFromDir("mono/addons")
 
-	//ix.addon.Load("schema", engine.ActiveGamemode().."/schema")
+	//mono.addon.Load("schema", engine.ActiveGamemode().."/schema")
 	//hook.Run("InitializedSchema")
 
-	//ix.addon.LoadFromDir(engine.ActiveGamemode().."/addons")
+	//mono.addon.LoadFromDir(engine.ActiveGamemode().."/addons")
 	//hook.Run("InitializedAddons")
 end
 
-function ix.addon.Get(identifier)
-	return ix.addon.list[identifier]
+function mono.addon.Get(identifier)
+	return mono.addon.list[identifier]
 end
 
-function ix.addon.LoadFromDir(directory)
+function mono.addon.LoadFromDir(directory)
 	local files, folders = file.Find(directory.."/*", "LUA")
 
 	for _, v in ipairs(folders) do
-		ix.addon.Load(v, directory.."/"..v)
+		mono.addon.Load(v, directory.."/"..v)
 	end
 
 	for _, v in ipairs(files) do
-		ix.addon.Load(string.StripExtension(v), directory.."/"..v, true)
+		mono.addon.Load(string.StripExtension(v), directory.."/"..v, true)
 	end
 end
 
-function ix.addon.SetUnloaded(uniqueID, state, bNoSave)
-	local addon = ix.addon.list[uniqueID]
+function mono.addon.SetUnloaded(uniqueID, state, bNoSave)
+	local addon = mono.addon.list[uniqueID]
 
 	if (state) then
 		if (addon and addon.OnUnload) then
 			addon:OnUnload()
 		end
 
-		ix.addon.unloaded[uniqueID] = true
-	elseif (ix.addon.unloaded[uniqueID]) then
-		ix.addon.unloaded[uniqueID] = nil
+		mono.addon.unloaded[uniqueID] = true
+	elseif (mono.addon.unloaded[uniqueID]) then
+		mono.addon.unloaded[uniqueID] = nil
 	else
 		return false
 	end
@@ -259,9 +253,9 @@ function ix.addon.SetUnloaded(uniqueID, state, bNoSave)
 			status = true
 		end
 
-		local unloaded = ix.data.Get("unloaded", {}, true, true)
+		local unloaded = mono.data.Get("unloaded", {}, true, true)
 			unloaded[uniqueID] = status
-		ix.data.Set("unloaded", unloaded, true, true)
+		mono.data.Set("unloaded", unloaded, true, true)
 	end
 
 	if (state) then
@@ -272,12 +266,12 @@ function ix.addon.SetUnloaded(uniqueID, state, bNoSave)
 end
 
 if (SERVER) then
-	function ix.addon.RunLoadData()
+	function mono.addon.RunLoadData()
 		local errors = hook.SafeRun("LoadData")
 
 		for _, v in pairs(errors or {}) do
 			if (v.addon) then
-				local addon = ix.addon.Get(v.addon)
+				local addon = mono.addon.Get(v.addon)
 
 				if (addon) then
 					local saveDataHooks = HOOKS_CACHE["SaveData"] or {}
@@ -294,7 +288,7 @@ if (SERVER) then
 end
 
 do
-	hook.ixCall = hook.ixCall or hook.Call
+	hook.bCall = hook.bCall or hook.Call
 
 	function hook.Call(name, gm, ...)
 		local cache = HOOKS_CACHE[name]
@@ -309,7 +303,7 @@ do
 			end
 		end
 
-		return hook.ixCall(name, gm, ...)
+		return hook.bCall(name, gm, ...)
 	end
 
     
@@ -339,7 +333,7 @@ do
 			end
 		end
 
-		local bSuccess, a, b, c, d, e, f = pcall(hook.ixCall, name, gm, ...)
+		local bSuccess, a, b, c, d, e, f = pcall(hook.bCall, name, gm, ...)
 
 		if (bSuccess) then
 			return errors, a, b, c, d, e, f

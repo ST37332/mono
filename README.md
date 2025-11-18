@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/github/v/release/ST37332/mono?style=for-the-badge)](https://github.com/ST37332/mono/releases)
 [![License](https://img.shields.io/github/license/ST37332/mono?style=for-the-badge)](LICENSE)
-[![Discord](https://img.shields.io/discord/krSz9PfghW?color=7289da&label=Discord&logo=discord&style=for-the-badge)](https://discord.gg/krSz9PfghW)
+[![Discord](https://img.shields.io/discord/1436632923246825599?color=7289da&label=Discord&logo=discord&style=for-the-badge)](https://discord.gg/krSz9PfghW)
 
 **Современность, Гибкость, Производительность.** MonoCore — это эволюция ролевого фреймворка для Garry's Mod, созданная с нуля для воплощения самых амбициозных проектов.
 

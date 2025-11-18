@@ -103,4 +103,3 @@ git clone https://github.com/yourname/yourrepository.git your_gamemode_name
 
 ---
 **Сделано с ❤️ для сообщества Garry's Mod.**
-```

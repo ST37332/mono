@@ -1,7 +1,7 @@
 GM.Name = "Mono"
-GM.Author = ""
+GM.Author = "Icey | aka Efim Andreevich"
 GM.Website = ""
-GM.Version = "0.1"
+GM.Version = "0.1.2"
 
 do
 	local playerMeta = FindMetaTable("Player")
@@ -13,20 +13,26 @@ do
 
 end
 
-mono.DX = mono.DX or mono.util.Include("game/cl_ui_shaders.lua")
 
-mono.util.Include("game/cl_ui_palette.lua")
-mono.util.Include("game/cl_ui_utils.lua")
-mono.util.Include("game/ui/generic.menu.lua", "client")
-mono.util.Include("game/ui/generic.panels.lua", "client")
-mono.util.Include("game/ui/tooltip.lua", "client")
-mono.util.Include("game/ui/mainmenu.title.lua", "client")
-mono.util.Include("game/ui/mainmenu.create.lua", "client")
-mono.util.Include("game/ui/tabmenu.frame.lua", "client")
-mono.util.Include("game/ui/tabmenu.lua", "client")
+// That's for the future for now.
+if GM.Version and GM.Version == "0.1.3" then
+	mono.DX = mono.DX or mono.util.Include("game/cl_ui_shaders.lua")
 
-mono.util.Include("game/items/sh_item.lua")
-mono.util.Include("game/inventory/sh_inventory.lua")
+	mono.util.Include("game/cl_ui_palette.lua")
+	mono.util.Include("game/cl_ui_utils.lua")
+	mono.util.Include("game/ui/generic.menu.lua", "client")
+	mono.util.Include("game/ui/generic.panels.lua", "client")
+	mono.util.Include("game/ui/tooltip.lua", "client")
+	mono.util.Include("game/ui/mainmenu.title.lua", "client")
+	mono.util.Include("game/ui/mainmenu.create.lua", "client")
+	mono.util.Include("game/ui/tabmenu.frame.lua", "client")
+	mono.util.Include("game/ui/tabmenu.lua", "client")
+
+	mono.util.Include("game/items/sh_item.lua")
+	mono.util.Include("game/inventory/sh_inventory.lua")
+else
+	continue 
+end
 
 mono.util.IncludeDir("kernel/meta")
 mono.util.IncludeDir("kernel/utils")

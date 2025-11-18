@@ -1,0 +1,7 @@
+"mono"
+{
+	"title"			"MonoCore"
+	"maps"			"^rp_"
+	"base"			"sandbox"
+	"author"		"Icey"
+}

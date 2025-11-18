@@ -45,7 +45,7 @@ MonoCore был разработан с четким пониманием пот
 ```bash
 # Клонируйте репозиторий в папку gamemodes
 cd garrysmod/gamemodes
-git clone https://github.com/yourname/yourrepository.git your_gamemode_name
+git clone https://github.com/ST37332/mono.git
 ```
 
 ---

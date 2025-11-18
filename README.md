@@ -1,6 +1,6 @@
 # MonoCore | Фреймворк для ролевых серверов Garry's Mod
 
-[![Version](https://img.shields.io/github/v/release/yourname/yourrepository?style=for-the-badge)](https://github.com/ST37332/mono/releases)
+[![Version](https://img.shields.io/github/v/release/yourname/yourrepository?style=for-the-badge)](https://github.com/ST37332/mono/releases/tag/v0.1.2)
 [![License](https://img.shields.io/github/license/yourname/yourrepository?style=for-the-badge)](LICENSE)
 [![Discord](https://img.shields.io/discord/your-discord-invite-code?color=7289da&label=Discord&logo=discord&style=for-the-badge)](https://discord.gg/krSz9PfghW)
 

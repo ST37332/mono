@@ -45,8 +45,8 @@ mono = mono or {
 	util = {}
 }
 
-include("core/sh_util.lua")
-include("core/sh_data.lua")
+include("kernel/utils/sh_util.lua")
+include("kernel/utils/sh_data.lua")
 include("shared.lua")
 
 CreateConVar("cl_weaponcolor", "0.30 1.80 2.10", {

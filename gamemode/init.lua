@@ -48,12 +48,12 @@ mono = mono or {
 }
 
 AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("core/sh_util.lua")
-AddCSLuaFile("core/sh_data.lua")
+AddCSLuaFile("kernel/utils/sh_util.lua")
+AddCSLuaFile("kernel/utils/sh_data.lua")
 AddCSLuaFile("shared.lua")
 
-include("core/sh_util.lua")
-include("core/sh_data.lua")
+include("kernel/utils/sh_util.lua")
+include("kernel/utils/sh_data.lua")
 include("shared.lua")
 
 cvars.AddChangeCallback("sbox_persist", function(name, old, new)

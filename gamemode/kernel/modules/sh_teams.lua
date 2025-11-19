@@ -13,13 +13,15 @@ function mono.Faction:Add(factionData)
     factionData.id = factionData.name
     factions[factionData.name] = factionData
 
-    for teamId, jobData in pairs(mono.Jobs)
-        local cmd = jobData.name
-        if cmd then
-            concommand.Add('change_team_'..cmd, function(ply)
-                if not ply:IsValid() then return end
-                ply:ChangeTeam(teamId, true)
-            end)
+    for teamId, jobData in pairs(mono.Jobs) do
+        if jobData.faction == factionData.name then
+            local cmd = jobData.command
+            if cmd then
+                concommand.Add("changejob_" .. cmd, function(ply)
+                    if not ply:IsValid() then return end
+                    ply:ChangeTeam(teamId, true)
+                end)
+            end
         end
     end
 

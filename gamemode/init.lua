@@ -1,11 +1,5 @@
 DeriveGamemode("sandbox")
 
-mono.allowedHoldableClasses = {
-	["prop_physics"] = true,
-	["prop_physics_override"] = true,
-	["prop_physics_multiplayer"] = true,
-	["prop_ragdoll"] = true
-}
 
 
 mono = mono or {

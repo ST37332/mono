@@ -1,6 +1,12 @@
 mono.addon = mono.addon or {}
 mono.addon.list = mono.addon.list or {}
 mono.addon.unloaded = mono.addon.unloaded or {}
+mono.allowedHoldableClasses = {
+	["prop_physics"] = true,
+	["prop_physics_override"] = true,
+	["prop_physics_multiplayer"] = true,
+	["prop_ragdoll"] = true
+}
 
 mono.util.Include("mono/gamemode/kornel/meta/sh_tool.lua")
 
@@ -12,7 +18,7 @@ function mono.addon.Load(uniqueID, path, isSingleFile, variable)
 	variable = variable or "ADDON"
 
 	local oldAddon = ADDON
-	local ADDON = {
+	local 	 = {
 		folder = path,
 		addon = oldAddon,
 		uniqueID = uniqueID,
@@ -29,7 +35,9 @@ function mono.addon.Load(uniqueID, path, isSingleFile, variable)
 	ADDON.loading = true
 
 	if (!isSingleFile) then
+		mono.lang.LoadFromDir(path.."/languages")
 		mono.util.IncludeDir(path.."/utils", true)
+		mono.Item:LoadFromDir(path.."/items")
 		mono.addon.LoadFromDir(path.."/addons")
 		mono.addon.LoadEntities(path.."/entities")
 

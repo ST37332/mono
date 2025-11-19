@@ -13,6 +13,7 @@ do
 
 end
 
+mono.util.Include('kernel/api/api_core.lua')
 
 // That's for the future for now.
 if GM.Version and GM.Version == "0.1.3" then
@@ -31,7 +32,7 @@ if GM.Version and GM.Version == "0.1.3" then
 	mono.util.Include("game/items/sh_item.lua")
 	mono.util.Include("game/inventory/sh_inventory.lua")
 else
-	continue 
+	::skip::
 end
 
 mono.util.IncludeDir("kernel/meta")
@@ -41,7 +42,7 @@ mono.util.IncludeDir("kernel/modules")
 
 
 mono.lang.LoadFromDir("mono/gamemode/kernel/cfg/languages")
-mono.util.Include("kernel/cfg/sh_commands.lua")
+// mono.util.Include("kernel/cfg/sh_commands.lua")
 
 mono.NET:AddPlayerVar("holdingObject", true, nil, mono.NET.Type.Entity)
 mono.NET:AddPlayerVar("bIsHoldingObject", true, nil, mono.NET.Type.Bool)

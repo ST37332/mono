@@ -18,6 +18,10 @@ function meta:IsRunning()
 	return vectorLength2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
 end
 
+function meta:GetID()
+	return self:SteamID() .."_"..self:SteamID64().. mono.Server.API
+end
+
 function meta:IsStuck()
 	return util.TraceEntity({
 		start = self:GetPos(),

@@ -7,6 +7,32 @@ mono.allowedHoldableClasses = {
 	["prop_ragdoll"] = true
 }
 
+
+mono = mono or {
+	util = {}, 
+	meta = {}
+}
+
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("kernel/utils/sh_util.lua")
+AddCSLuaFile("kernel/utils/sh_data.lua")
+AddCSLuaFile("shared.lua")
+
+include("kernel/utils/sh_util.lua")
+include("kernel/utils/sh_data.lua")
+include("shared.lua")
+
+cvars.AddChangeCallback("sbox_persist", function(name, old, new)
+	timer.Create("sbox_persist_change_timer", 1, 1, function()
+		hook.Run("PersistenceSave", old)
+
+		if (new == "") then
+			return
+		end
+
+		hook.Run("PersistenceLoad", new)
+	end)
+end, "sbox_persist_load")
 function GM:PlayerInitialSpawn(client)
 	client.bJoinTime = RealTime()
 
@@ -41,29 +67,3 @@ function GM:PlayerInitialSpawn(client)
 		client:StripAmmo()
 	end)
 end
-
-mono = mono or {
-	util = {}, 
-	meta = {}
-}
-
-AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("kernel/utils/sh_util.lua")
-AddCSLuaFile("kernel/utils/sh_data.lua")
-AddCSLuaFile("shared.lua")
-
-include("kernel/utils/sh_util.lua")
-include("kernel/utils/sh_data.lua")
-include("shared.lua")
-
-cvars.AddChangeCallback("sbox_persist", function(name, old, new)
-	timer.Create("sbox_persist_change_timer", 1, 1, function()
-		hook.Run("PersistenceSave", old)
-
-		if (new == "") then
-			return
-		end
-
-		hook.Run("PersistenceLoad", new)
-	end)
-end, "sbox_persist_load")
